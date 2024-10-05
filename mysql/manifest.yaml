@@ -28,6 +28,7 @@ spec:
   template:
     metadata:
       labels:
+        # has to match .spec.template.metadata.labels
         component: mysql 
         project: expense
         tier: db
@@ -45,4 +46,21 @@ spec:
       - name: mysql
         persistentVolumeClaim:
           claimName: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: expense
+spec:
+  clusterIP: None # This is called headless service if there is no head then no IP
+  selector:
+    component: mysql 
+    project: expense
+    tier: db
+  ports:
+  - protocol: TCP
+    port: 3306 #service-port
+    targetPort: 3306 #target-port
+
   
